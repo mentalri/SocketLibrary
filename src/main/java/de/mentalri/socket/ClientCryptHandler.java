@@ -1,11 +1,10 @@
-package de.mentalri.actionhouse.socket;
+package de.mentalri.socket;
 
 import javax.crypto.KeyAgreement;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
-import java.net.Socket;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;

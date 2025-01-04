@@ -1,8 +1,6 @@
-package de.mentalri.actionhouse.socket;
+package de.mentalri.socket;
 
 import java.io.IOException;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 

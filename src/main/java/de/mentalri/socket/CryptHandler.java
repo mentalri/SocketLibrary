@@ -1,4 +1,4 @@
-package de.mentalri.actionhouse.socket;
+package de.mentalri.socket;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
