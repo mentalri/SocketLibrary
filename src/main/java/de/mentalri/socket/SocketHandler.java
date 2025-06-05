@@ -32,6 +32,8 @@ public class SocketHandler {
         socket.getInputStream().read(dataBuffer);
         return dataBuffer;
     }
-
+    public void close() throws IOException {
+        socket.close();
+    }
 
 }

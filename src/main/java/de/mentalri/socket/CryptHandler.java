@@ -6,7 +6,7 @@ import javax.crypto.spec.IvParameterSpec;
 import java.io.IOException;
 
 public abstract class CryptHandler extends SocketHandler{
-    protected SecretKey secretKey;;
+    protected SecretKey secretKey;
     protected byte[] iv;
     public CryptHandler(SocketHandler handler, SecretKey secretKey, byte[] iv) {
         super(handler);
