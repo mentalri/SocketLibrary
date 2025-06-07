@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
-public class SocketHandler {
+public class SocketHandler implements AutoCloseable{
     protected final Socket socket;
     protected final SocketHandler handler;
     public SocketHandler(Socket socket) {
@@ -32,6 +32,19 @@ public class SocketHandler {
         socket.getInputStream().read(dataBuffer);
         return dataBuffer;
     }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public String getIp() {
+        return socket.getInetAddress().getHostAddress();
+    }
+
+    public int getPort() {
+        return socket.getPort();
+    }
+
     public void close() throws IOException {
         socket.close();
     }
