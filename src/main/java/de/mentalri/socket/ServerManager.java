@@ -14,6 +14,7 @@ public class ServerManager {
     protected final ArrayList<byte[]> receivedData = new ArrayList<>();
     protected Class<? extends Command> commandClass;
     protected boolean online = true;
+    protected boolean logIncomingData = true;
     protected Thread serverThread;
     protected ServerSocket serverSocket;
 
@@ -57,6 +58,9 @@ public class ServerManager {
 
             byte[] data = handler.readData();
             receivedData.add(data);
+            if (logIncomingData) {
+                logger.info(new String(data));
+            }
             ObjectMapper objectMapper = new ObjectMapper();
             Command command = objectMapper.readValue(data, commandClass);
             execute(command, handler);
