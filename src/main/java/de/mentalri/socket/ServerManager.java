@@ -1,58 +1,67 @@
 package de.mentalri.socket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class ServerManager {
-    private static ServerManager instance;
-
-    public static ServerManager getInstance() {
-        if (instance == null) {
-            instance = new ServerManager();
-        }
-        return instance;
-    }
     protected final Logger logger = Logger.getLogger("ServerManager");
+    @Getter
+    protected final ArrayList<byte[]> receivedData = new ArrayList<>();
     protected Class<? extends Command> commandClass;
     protected boolean online = true;
+    protected Thread serverThread;
+    protected ServerSocket serverSocket;
+
     protected ServerManager() {
         // Initialize the server manager
     }
+    public void stop() {
+        if (serverThread != null && serverThread.isAlive()) {
+            serverThread.interrupt();
+            try {
+                if (serverSocket != null && !serverSocket.isClosed()) {
+                    serverSocket.close();
+                }
+            } catch (IOException e) {
+                logger.severe("Error while closing server socket: " + e.getMessage());
+            }
+        }
+    }
 
     public void run(int serverPort, Class<? extends Command> commandClass) {
+        stop();
         this.commandClass = commandClass;
-        new Thread(() -> {
+        serverThread = new Thread(() -> {
             logger.info("ServerManager started on port: " + serverPort);
             try {
-                ServerSocket serverSocket = new ServerSocket(serverPort);
-                while (online)
+                serverSocket = new ServerSocket(serverPort);
+                while (online && Thread.currentThread().isAlive() && !Thread.currentThread().isInterrupted())
                 {
-                    handleConnection(serverSocket);
+                    handleConnection();
                 }
                 serverSocket.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }).start();
+        });
+        serverThread.start();
     }
-    public void handleConnection(ServerSocket serverSocket){
+    public void handleConnection(){
         try {
-            Socket socket = serverSocket.accept();
-            SocketHandler handler = new SocketHandler(socket);
+            SocketHandler handler = new SocketHandler(serverSocket.accept());
 
             byte[] data = handler.readData();
-
+            receivedData.add(data);
             ObjectMapper objectMapper = new ObjectMapper();
             Command command = objectMapper.readValue(data, commandClass);
             execute(command, handler);
 
-        }catch (IOException e) {
-            logger.severe("Error while handling connection: " + e.getMessage());
-        } catch (Exception e) {
+        }catch (Exception e) {
             logger.severe("Error while handling connection: " + e.getMessage());
         }
     }
