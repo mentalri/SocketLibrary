@@ -1,10 +1,13 @@
 package de.mentalri.socket;
 
+import lombok.Getter;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
 public class SocketHandler implements AutoCloseable{
+    @Getter
     protected final Socket socket;
     protected final SocketHandler handler;
     public SocketHandler(Socket socket) {
@@ -31,10 +34,6 @@ public class SocketHandler implements AutoCloseable{
         byte[] dataBuffer = new byte[size];
         socket.getInputStream().read(dataBuffer);
         return dataBuffer;
-    }
-
-    public Socket getSocket() {
-        return socket;
     }
 
     public String getIp() {
