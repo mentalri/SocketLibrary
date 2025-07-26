@@ -6,6 +6,7 @@ import lombok.Getter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class ServerManager {
@@ -66,7 +67,7 @@ public class ServerManager {
             execute(command, handler);
 
         }catch (Exception e) {
-            logger.severe("Error while handling connection: " + e.getMessage());
+            logger.severe("Error while handling connection: " + e.getMessage() + Arrays.toString(e.getStackTrace()));
         }
     }
     public void execute(Command command, SocketHandler handler) throws Exception {
