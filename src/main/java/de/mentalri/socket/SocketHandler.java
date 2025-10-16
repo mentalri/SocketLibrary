@@ -33,7 +33,11 @@ public class SocketHandler implements AutoCloseable{
         int size = ByteBuffer.wrap(headerBuffer).getInt();
         byte[] dataBuffer = new byte[size];
         int dataRead = 0;
+        long startTime = System.currentTimeMillis();
         while (dataRead < size) {
+            if (System.currentTimeMillis() - startTime > 1000) {
+                throw new IOException("Timeout while reading data");
+            }
             int bytesRead = socket.getInputStream().read(dataBuffer, dataRead, size - dataRead);
             if (bytesRead == -1) {
                 throw new IOException("Stream closed before reading all data");
