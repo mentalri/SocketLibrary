@@ -35,7 +35,7 @@ public class SocketHandler implements AutoCloseable{
         int dataRead = 0;
         long startTime = System.currentTimeMillis();
         while (dataRead < size) {
-            if (System.currentTimeMillis() - startTime > 1000) {
+            if (System.currentTimeMillis() - startTime > 5000) {
                 throw new IOException("Timeout while reading data");
             }
             int bytesRead = socket.getInputStream().read(dataBuffer, dataRead, size - dataRead);
